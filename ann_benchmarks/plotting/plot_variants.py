@@ -4,6 +4,7 @@ all_plot_variants = {
     "recall/time": ("k-nn", "qps"),
     "recall/atime": ("k-nn", "aqps"),
     "recall/wtime": ("k-nn", "wqps"),
+    "recall/wtime": ("k-nn", "std"),
     "recall/buildtime": ("k-nn", "build"),
     "recall/indexsize": ("k-nn", "indexsize"),
     "recall/distcomps": ("k-nn", "distcomps"),

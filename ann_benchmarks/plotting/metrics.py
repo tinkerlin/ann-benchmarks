@@ -79,6 +79,9 @@ def rel(dataset_distances, run_distances, metrics):
 def queries_per_second(queries, attrs):
     return 1.0 / attrs["best_search_time"]
 
+def std(queries, attrs):
+    return attrs["std_search_time"]
+
 def average_queries_per_second(queries, attrs):
     return 1.0 / attrs["worest_search_time"]
 
@@ -137,6 +140,11 @@ all_metrics = {
     "wqps": {
         "description": "worest Queries per second (1/s)",
         "function": lambda true_distances, run_distances, metrics, run_attrs: worest_queries_per_second(true_distances, run_attrs),  # noqa
+        "worst": float("-inf")
+    },
+    "std": {
+        "description": "STD",
+        "function": lambda true_distances, run_distances, metrics, run_attrs: std(true_distances, run_attrs),  # noqa
         "worst": float("-inf")
     },
     "distcomps": {
