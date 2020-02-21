@@ -83,10 +83,10 @@ def std(queries, attrs):
     return attrs["std_search_time"]
 
 def average_queries_per_second(queries, attrs):
-    return 1.0 / attrs["worest_search_time"]
+    return 1.0 / attrs["average_search_time"]
 
 def worest_queries_per_second(queries, attrs):
-    return 1.0 / attrs["average_search_time"]
+    return 1.0 / attrs["worest_search_time"]
 
 def index_size(queries, attrs):
     # TODO(erikbern): should replace this with peak memory usage or something
