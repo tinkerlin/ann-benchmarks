@@ -28,6 +28,7 @@ def run_individual_query(algo, X_train, X_test, distance, count, run_count,
         ((not batch) and hasattr(algo, "prepare_query"))
 
     best_search_time = float('inf')
+    worest_search_time = float('inf')
     for i in range(run_count):
         print('Run %d/%d...' % (i + 1, run_count))
         # a bit dumb but can't be a scalar since of Python's scoping rules
@@ -81,11 +82,16 @@ def run_individual_query(algo, X_train, X_test, distance, count, run_count,
         search_time = total_time / len(X_test)
         avg_candidates = total_candidates / len(X_test)
         best_search_time = min(best_search_time, search_time)
+        worest_search_time = max(worest_search_time, search_time)
+        std_search_time = numpy.std([time for time, _ in results])
 
     verbose = hasattr(algo, "query_verbose")
     attrs = {
         "batch_mode": batch,
         "best_search_time": best_search_time,
+        "worest_search_time": worest_search_time,
+        "average_search_time": search_time,
+        "std_search_time": std_search_time,
         "candidates": avg_candidates,
         "expect_extra": verbose,
         "name": str(algo),
