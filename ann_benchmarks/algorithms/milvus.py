@@ -19,7 +19,7 @@ class Milvus(BaseANN):
         if self._metric == 'angular':
             X = sklearn.preprocessing.normalize(X, axis=1, norm='l2')
 
-        self._milvus.create_table({'table_name': self._table_name, 'dimension': X.shape[1]})
+        self._milvus.create_table({'table_name': self._table_name, 'dimension': X.shape[1], 'index_file_size':4096})
         status, ids = self._milvus.insert(table_name=self._table_name, records=X.tolist())
         index_type = getattr(milvus.IndexType, self._index_type)  # a bit hacky but works
         self._milvus.create_index(self._table_name, {'index_type': index_type, 'nlist': self._nlist})
@@ -42,6 +42,21 @@ class Milvus(BaseANN):
             return []  # Seems to happen occasionally, not sure why
         r = [self._milvus_id_to_index[z.id] for z in results[0]]
         return r
+
+    def batch_query(self, X, n):
+        if self._metric == 'angular':
+            X /= numpy.linalg.norm(X)
+        X = X.tolist()
+        status, self.res = self._milvus.search(table_name=self._table_name, query_records=X, top_k=n, nprobe=self._nprobe)
+
+    def get_batch_results(self):
+        results = self.res
+        res = []
+        for result in results:
+            r = [self._milvus_id_to_index[z.id] for z in result]
+            res.append(r)
+        return res
+
 
     def __str__(self):
         return 'Milvus(index_type=%s, nlist=%d, nprobe=%d)' % (self._index_type, self._nlist, self._nprobe)

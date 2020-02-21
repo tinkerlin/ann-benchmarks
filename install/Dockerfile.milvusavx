@@ -1,7 +1,7 @@
 # Install Milvus
-FROM milvusdb/milvus:0.6.0-cpu-d120719-2b40dd as milvus
+FROM milvus_avx512:cpu as milvus
 RUN apt-get update
-RUN apt-get install -y wget
+# RUN apt-get install -y wget
 #RUN wget https://raw.githubusercontent.com/milvus-io/docs/v0.6.0/assets/server_config.yaml
 #RUN sed -i 's/cpu_cache_capacity: 4/cpu_cache_capacity: 16/' server_config.yaml  # otherwise my Docker blows up
 #RUN sed -i 's/cache_insert_data: false/cache_insert_data: true/' server_config.yaml
