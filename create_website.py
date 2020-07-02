@@ -172,10 +172,11 @@ def build_detail_site(data, label_func, j2_env, linestyles, batch=False):
         data = {"normal": [], "scatter": []}
 
         for plottype in args.plottype:
-            xn, yn = plot_variants[plottype]
-            data["normal"].append(create_plot(
-                runs, xn, yn, convert_linestyle(linestyles), j2_env))
-            if args.scatter:
+            xn, yn, line, scatter = plot_variants[plottype]
+            if line:
+                data["normal"].append(create_plot(
+                    runs, xn, yn, convert_linestyle(linestyles), j2_env))
+            if args.scatter and scatter:
                 data["scatter"].append(
                     create_plot(runs, xn, yn, convert_linestyle(linestyles),
                                 j2_env, "Scatterplot ", "bubble"))
