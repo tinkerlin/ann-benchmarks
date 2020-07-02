@@ -19,6 +19,7 @@ html*/
 *.txt
 *.log
 *.tar
+*.ipynb
 
 # data
 data*/
