@@ -169,14 +169,23 @@ def build_detail_site(data, label_func, j2_env, linestyles, batch=False):
         print("Building '%s'" % name)
         all_runs = runs.keys()
         label = label_func(name)
-        data = {"normal": [], "scatter": []}
+        data = {"normal": [], "scatter": [], "if_plot": [], "if_scatter": []}
 
         for plottype in args.plottype:
             xn, yn, line, scatter = plot_variants[plottype]
             if line:
-                data["normal"].append(create_plot(
-                    runs, xn, yn, convert_linestyle(linestyles), j2_env))
+                data["if_plot"].append("true")
+            else:
+                data["if_plot"].append("false")
+
+            data["normal"].append(create_plot(
+                runs, xn, yn, convert_linestyle(linestyles), j2_env))
             if args.scatter and scatter:
+                data["if_scatter"].append("true")
+            else:
+                data["if_scatter"].append("false")
+
+            if args.scatter:
                 data["scatter"].append(
                     create_plot(runs, xn, yn, convert_linestyle(linestyles),
                                 j2_env, "Scatterplot ", "bubble"))
@@ -269,7 +278,7 @@ def load_all_results():
     # {position: [sdn, properties, idx, ms]}
     cache = collections.OrderedDict()
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=32) as executor:
         future_results = {executor.submit(process, (c, p, r, f))
                           for c, (p, r, f) in enumerate(results.load_all_results_v2())}
         for future in concurrent.futures.as_completed(future_results):
